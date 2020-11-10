@@ -1,8 +1,11 @@
 import data.ExitCodes.*
+import data.RoleResource
+import data.Roles
 import services.DatabaseWrapper
 import services.HandlerCLI
 import java.math.BigInteger
 import java.security.MessageDigest
+
 
 class App {
     private val db = DatabaseWrapper()
@@ -22,11 +25,20 @@ class App {
     }
 
     //Проверка прошла аутентификация или нет
-    private fun hasAuthent2(login: String, pass: String): Boolean {
+    private fun hasAuthentificate(login: String, pass: String): Boolean {
         when (authentificate(login, pass)) {
             2 -> return false
             3 -> return false
             4 -> return false
+        }
+        return true
+    }
+
+    //Проверка прошла авторизация или нет
+    private fun hasAuthorization(roleStr: String, res: String, idUser: Long): Boolean {
+        when (authorization(roleStr, res, idUser)) {
+            5 -> return false
+            6 -> return false
         }
         return true
     }
@@ -43,20 +55,35 @@ class App {
             INVALID_PASSWORD.exitCode
     }
 
+    private fun authorization(roleStr: String, res: String, idUser: Long): Int = try {
+        val role = Roles.valueOf(roleStr)
+        val resource = RoleResource(role = role, resource = res, idUser = idUser)
+        if (db.checkAccess(resource))
+            SUCCESS.exitCode
+        else
+            NO_ACCESS.exitCode
+    } catch (e: IllegalArgumentException) {
+        UNKNOWN_ROLE.exitCode
+    }
+
     fun run(args: Array<String>): Int {
 
         val handlerCLI = HandlerCLI()
         val arguments = handlerCLI.parse(args)
-
+        val user = db.getUser(arguments.login.toString())
         /* Проверка на пустоту и справку */
 
         when {
             arguments.hasHelp() -> return HELP.exitCode
             arguments.isEmpty() -> return HELP.exitCode
-            !hasAuthent2(arguments.login.toString(), arguments.pass.toString()) -> return authentificate(arguments.login.toString(), arguments.pass.toString())
-
         }
-
+        if (arguments.isNeedAuthentication()) {
+            if (!hasAuthentificate(arguments.login.toString(), arguments.pass.toString()))
+                return authentificate(arguments.login.toString(), arguments.pass.toString())
+        }
+        if (arguments.isNeedAuthorization())
+            if (!hasAuthorization(arguments.role!!, arguments.res!!, user.id!!))
+                return authorization(arguments.role!!, arguments.res!!, user.id)
 
         return SUCCESS.exitCode
     }
