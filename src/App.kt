@@ -1,6 +1,7 @@
 import data.ExitCodes.*
 import data.RoleResource
 import data.Roles
+import data.Activity
 import services.DatabaseWrapper
 import services.HandlerCLI
 import java.math.BigInteger
@@ -42,6 +43,12 @@ class App {
         }
         return true
     }
+    private fun hasAccouting(activity: Activity):Boolean{
+        when (accounting(activity)){
+            7-> return false
+        }
+        return true
+    }
 
     private fun authentificate(login: String, pass: String): Int {
         val user = db.getUser(login)
@@ -66,17 +73,30 @@ class App {
         UNKNOWN_ROLE.exitCode
     }
 
+    private fun accounting(activity: Activity): Int{
+        if (!activity.hasValidDate())
+            return INCORRECT_ACTIVITY.exitCode
+        db.addActivity(activity)
+
+        return SUCCESS.exitCode
+    }
+
     fun run(args: Array<String>): Int {
 
         val handlerCLI = HandlerCLI()
         val arguments = handlerCLI.parse(args)
         val user = db.getUser(arguments.login.toString())
         /* Проверка на пустоту и справку */
+        val activity = Activity(
+                role = arguments.role.toString(),
+                res = arguments.res.toString(),
+                ds = arguments.ds.toString(),
+                de = arguments.de.toString(),
+                vol = arguments.vol.toString()
+        )
 
-        when {
-            arguments.hasHelp() -> return HELP.exitCode
-            arguments.isEmpty() -> return HELP.exitCode
-        }
+        if (arguments.isNeedHelp()) return HELP.exitCode
+
         if (arguments.isNeedAuthentication()) {
             if (!hasAuthentificate(arguments.login.toString(), arguments.pass.toString()))
                 return authentificate(arguments.login.toString(), arguments.pass.toString())
@@ -84,6 +104,12 @@ class App {
         if (arguments.isNeedAuthorization())
             if (!hasAuthorization(arguments.role!!, arguments.res!!, user.id!!))
                 return authorization(arguments.role!!, arguments.res!!, user.id)
+
+        if (arguments.isNeedAccounting())
+            if (!hasAccouting(activity))
+                return accounting(activity)
+
+
 
         return SUCCESS.exitCode
     }

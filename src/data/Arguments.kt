@@ -30,5 +30,4 @@ data class Arguments(
 
     // Проверка необходимости аккаунтинга
     fun isNeedAccounting() = ds != null && de != null && vol != null
-
 }
