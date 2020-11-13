@@ -30,9 +30,10 @@ class App {
         val user = db.getUser(login)
         when {
             isLoginValid(login) -> return INVALID_LOGIN_FORM.exitCode
-            !user.isInvalidUser() -> return UNKNOWN_LOGIN.exitCode
+//            !user.isInvalidUser() -> return UNKNOWN_LOGIN.exitCode
+            user == null -> return UNKNOWN_LOGIN.exitCode
         }
-        return if (user.hashPassword == md5(md5(pass) + user.salt))
+        return if (user!!.hashPassword == md5(md5(pass) + user.salt))
             SUCCESS.exitCode
         else
             INVALID_PASSWORD.exitCode
@@ -80,7 +81,7 @@ class App {
 
         }
         if (arguments.isNeedAuthorization()) {
-            val codeAuthorization = authorization(arguments.role!!, arguments.res!!, user.id!!)
+            val codeAuthorization = authorization(arguments.role!!, arguments.res!!, user!!.id!!)
             if (codeAuthorization != SUCCESS.exitCode)
                 return codeAuthorization
 
