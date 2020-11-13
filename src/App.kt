@@ -1,7 +1,7 @@
+import data.Activity
 import data.ExitCodes.*
 import data.RoleResource
 import data.Roles
-import data.Activity
 import services.DatabaseWrapper
 import services.HandlerCLI
 import java.math.BigInteger
@@ -25,30 +25,6 @@ class App {
 
     }
 
-    //Проверка прошла аутентификация или нет
-    private fun hasAuthentificate(login: String, pass: String): Boolean {
-        when (authentificate(login, pass)) {
-            2 -> return false
-            3 -> return false
-            4 -> return false
-        }
-        return true
-    }
-
-    //Проверка прошла авторизация или нет
-    private fun hasAuthorization(roleStr: String, res: String, idUser: Long): Boolean {
-        when (authorization(roleStr, res, idUser)) {
-            5 -> return false
-            6 -> return false
-        }
-        return true
-    }
-    private fun hasAccouting(activity: Activity):Boolean{
-        when (accounting(activity)){
-            7-> return false
-        }
-        return true
-    }
 
     private fun authentificate(login: String, pass: String): Int {
         val user = db.getUser(login)
@@ -73,7 +49,7 @@ class App {
         UNKNOWN_ROLE.exitCode
     }
 
-    private fun accounting(activity: Activity): Int{
+    private fun accounting(activity: Activity): Int {
         if (!activity.hasValidDate())
             return INCORRECT_ACTIVITY.exitCode
         db.addActivity(activity)
@@ -98,16 +74,23 @@ class App {
         if (arguments.isNeedHelp()) return HELP.exitCode
 
         if (arguments.isNeedAuthentication()) {
-            if (!hasAuthentificate(arguments.login.toString(), arguments.pass.toString()))
-                return authentificate(arguments.login.toString(), arguments.pass.toString())
-        }
-        if (arguments.isNeedAuthorization())
-            if (!hasAuthorization(arguments.role!!, arguments.res!!, user.id!!))
-                return authorization(arguments.role!!, arguments.res!!, user.id)
+            val codeAuthentificate = authentificate(arguments.login.toString(), arguments.pass.toString())
+            if (codeAuthentificate != SUCCESS.exitCode)
+                return codeAuthentificate
 
-        if (arguments.isNeedAccounting())
-            if (!hasAccouting(activity))
-                return accounting(activity)
+        }
+        if (arguments.isNeedAuthorization()) {
+            val codeAuthorization = authorization(arguments.role!!, arguments.res!!, user.id!!)
+            if (codeAuthorization != SUCCESS.exitCode)
+                return codeAuthorization
+
+        }
+        if (arguments.isNeedAccounting()) {
+            val codeAccoutig = accounting(activity)
+            if (codeAccoutig != SUCCESS.exitCode)
+                return codeAccoutig
+        }
+
 
 
 
