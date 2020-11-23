@@ -3,16 +3,15 @@ jdk:
 
 install: true
 
-before_install:
-  - chmod +x gradlew
-  - chmod +x gradle/wrapper/gradle-wrapper.jar
-  - сhmod +x TEST.sh
-  - сhmod +x BUILD.sh
-  - сhmod +x RUN.sh
+
+
 script:
   - curl -s get.sdkman.io | bash
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
   - echo sdkman_auto_answer=true > ~/.sdkman/etc/config
   - source "/home/travis/.sdkman/bin/sdkman-init.sh"
   - sdk install kotlin
+  - сhmod +x TEST.sh
+  - сhmod +x BUILD.sh
+  - сhmod +x RUN.sh
   - ./TEST.sh
