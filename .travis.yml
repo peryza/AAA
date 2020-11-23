@@ -2,6 +2,7 @@ jdk:
   - openjdk11
 
 install: true
+лваьд
 
 script:
   - curl -s get.sdkman.io | bash
