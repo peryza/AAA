@@ -3,7 +3,7 @@ import data.ExitCodes.*
 import data.RoleResource
 import data.Roles
 import services.DatabaseWrapper
-import services.HandlerCLI
+import services.ParserArguments
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -60,8 +60,9 @@ class App {
 
     fun run(args: Array<String>): Int {
 
-        val handlerCLI = HandlerCLI()
-        val arguments = handlerCLI.parse(args)
+        val parser = ParserArguments("handler")
+        val arguments = parser.getParsedArgs(args)
+
         val user = db.getUser(arguments.login.toString())
         /* Проверка на пустоту и справку */
         val activity = Activity(
