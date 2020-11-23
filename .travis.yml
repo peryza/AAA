@@ -3,6 +3,9 @@ jdk:
 
 install: true
 
+before_install:
+  - chmod +x gradlew
+  - chmod +x gradle/wrapper/gradle-wrapper.jar
 script:
   - curl -s get.sdkman.io | bash
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
