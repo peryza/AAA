@@ -1,17 +1,8 @@
-jdk:
-  - openjdk11
+language: kotlin
 
-install: true
-
-
+before_script:
+  - sudo snap install --classic kotlin
+  - ./BUILD.sh
 
 script:
-  - curl -s get.sdkman.io | bash
-  - source "$HOME/.sdkman/bin/sdkman-init.sh"
-  - echo sdkman_auto_answer=true > ~/.sdkman/etc/config
-  - source "/home/travis/.sdkman/bin/sdkman-init.sh"
-  - sdk install kotlin
-  - сhmod +x TEST.sh
-  - сhmod +x BUILD.sh
-  - сhmod +x RUN.sh
   - ./TEST.sh
