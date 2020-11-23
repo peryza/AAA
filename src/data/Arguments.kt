@@ -1,5 +1,4 @@
 package data
-import App
 
 data class Arguments(
         var h: Boolean = false,
@@ -16,8 +15,7 @@ data class Arguments(
     fun hasHelp() = h
 
     // Проверка на отсутствие аргументов
-    fun isEmpty() =
-            (login == null && pass == null && role == null && res == null && ds == null && de == null && vol == null)
+    fun isEmpty() = (login == null && pass == null && role == null && res == null && ds == null && de == null && vol == null)
 
     // Проверка необходимости вывода справки
     fun isNeedHelp() = hasHelp() || isEmpty() || !isNeedAuthentication()
