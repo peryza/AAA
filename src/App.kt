@@ -64,14 +64,8 @@ class App {
         val arguments = parser.getParsedArgs(args)
 
         val user = db.getUser(arguments.login.toString())
-        /* Проверка на пустоту и справку */
-        val activity = Activity(
-                role = arguments.role.toString(),
-                res = arguments.res.toString(),
-                ds = arguments.ds.toString(),
-                de = arguments.de.toString(),
-                vol = arguments.vol.toString()
-        )
+
+
 
         if (arguments.isNeedHelp()) return HELP.exitCode
 
@@ -88,6 +82,13 @@ class App {
 
         }
         if (arguments.isNeedAccounting()) {
+            val activity = Activity(
+                    role = Roles.valueOf(arguments.role.toString()),
+                    res = arguments.res.toString(),
+                    ds = arguments.ds.toString(),
+                    de = arguments.de.toString(),
+                    vol = arguments.vol.toString()
+            )
             val codeAccoutig = accounting(activity)
             if (codeAccoutig != SUCCESS.exitCode)
                 return codeAccoutig

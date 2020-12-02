@@ -1,16 +1,17 @@
 package data
+
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
 data class Activity(
         val id: Long? = null,
-        val role: String,
+        val role: Roles,
         val res: String,
         val ds: String,
         val de: String,
         val vol: String
 ) {
-//Проверка валидности даты
+    //Проверка валидности даты
     fun hasValidDate(): Boolean {
         try {
             LocalDate.parse(ds)
