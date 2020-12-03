@@ -11,26 +11,28 @@ import java.security.MessageDigest
 class App {
     private val db = DatabaseWrapper()
 
-    /* метод хеширования */
+    /**
+     * метод хеширования
+     */
     private fun md5(password: String): String {
         val md = MessageDigest.getInstance("MD5")
         return BigInteger(1, md.digest(password.toByteArray())).toString(16).padStart(32, '0')
     }
 
-    /* метод для проверки формата логина */
+    /**
+     *  метод для проверки формата логина
+     */
     private fun isLoginValid(login: String): Boolean {
         val mathResult = Regex("[^a-zA-Z0-9]").find(login)
         if (mathResult != null) return true
+
         return false
-
     }
-
 
     private fun authentificate(login: String, pass: String): Int {
         val user = db.getUser(login)
         when {
             isLoginValid(login) -> return INVALID_LOGIN_FORM.exitCode
-//            !user.isInvalidUser() -> return UNKNOWN_LOGIN.exitCode
             user == null -> return UNKNOWN_LOGIN.exitCode
         }
         return if (user!!.hashPassword == md5(md5(pass) + user.salt))
@@ -62,24 +64,19 @@ class App {
 
         val parser = ParserArguments("handler")
         val arguments = parser.getParsedArgs(args)
-
         val user = db.getUser(arguments.login.toString())
-
-
-
         if (arguments.isNeedHelp()) return HELP.exitCode
-
         if (arguments.isNeedAuthentication()) {
             val codeAuthentificate = authentificate(arguments.login.toString(), arguments.pass.toString())
             if (codeAuthentificate != SUCCESS.exitCode)
-                return codeAuthentificate
 
+                return codeAuthentificate
         }
         if (arguments.isNeedAuthorization()) {
             val codeAuthorization = authorization(arguments.role!!, arguments.res!!, user!!.id!!)
             if (codeAuthorization != SUCCESS.exitCode)
-                return codeAuthorization
 
+                return codeAuthorization
         }
         if (arguments.isNeedAccounting()) {
             val activity = Activity(
@@ -91,11 +88,9 @@ class App {
             )
             val codeAccoutig = accounting(activity)
             if (codeAccoutig != SUCCESS.exitCode)
+
                 return codeAccoutig
         }
-
-
-
 
         return SUCCESS.exitCode
     }

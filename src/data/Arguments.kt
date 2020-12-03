@@ -11,21 +11,33 @@ data class Arguments(
         var vol: String? = null
 ) {
 
-    // Проверка на команду справки
-    fun hasHelp() = h
+    /**
+     * Проверка на команду справки
+     */
+    private fun hasHelp() = h
 
-    // Проверка на отсутствие аргументов
-    fun isEmpty() = (login == null && pass == null && role == null && res == null && ds == null && de == null && vol == null)
+    /**
+     * Проверка на отсутствие аргументов
+     */
+    private fun isEmpty() = (login == null && pass == null && role == null && res == null && ds == null && de == null && vol == null)
 
-    // Проверка необходимости вывода справки
+    /**
+     * Проверка необходимости вывода справки
+     */
     fun isNeedHelp() = hasHelp() || isEmpty() || !isNeedAuthentication()
 
-    // Проверка необходимости аутентификации
+    /**
+     * Проверка необходимости аутентификации
+     */
     fun isNeedAuthentication() = login != null && pass != null
 
-    // Проверка необходимости авторизации
+    /**
+     * Проверка необходимости авторизации
+     */
     fun isNeedAuthorization() = role != null && res != null
 
-    // Проверка необходимости аккаунтинга
+    /**
+     * Проверка необходимости аккаунтинга
+     */
     fun isNeedAccounting() = ds != null && de != null && vol != null
 }

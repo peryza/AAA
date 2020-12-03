@@ -11,7 +11,9 @@ data class Activity(
         val de: String,
         val vol: String
 ) {
-    //Проверка валидности даты
+    /**
+     *  Проверка валидности даты
+     */
     fun hasValidDate(): Boolean {
         try {
             LocalDate.parse(ds)
@@ -19,8 +21,8 @@ data class Activity(
         } catch (error: DateTimeParseException) {
             return false
         }
-        if (vol.toIntOrNull() == null)
-            return false
+        if (vol.toIntOrNull() == null) return false
+
         return true
     }
 }
