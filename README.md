@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/peryza/AAA.svg?branch=master)](https://travis-ci.org/github/peryza/AAA)
-[![codecov](https://peryza.github.io/AAA/)](https://peryza.github.io/AAA/)
+
+[GitHub Pages](https://peryza.github.io/AAA/)
 
 # [AAA](https://github.com/peryza/AAA.git)
 Проект для реализации Аутентификации, Авторизации и Аккаунтинга
